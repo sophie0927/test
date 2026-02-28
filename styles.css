@@ -1,8 +1,7 @@
 :root {
-  --bg-1: #d8c8bf;
-  --bg-2: #aeb7b0;
-  --bg-3: #c2c9d0;
-  --text-base: #3f4a4f;
+  --bg-1: #f7d7c8;
+  --bg-2: #c7dfd2;
+  --bg-3: #ced9f2;
 }
 
 * {
@@ -19,26 +18,27 @@ body {
 }
 
 body {
-  background: radial-gradient(circle at 20% 20%, var(--bg-1), transparent 45%),
-    radial-gradient(circle at 80% 15%, var(--bg-2), transparent 42%),
-    radial-gradient(circle at 50% 80%, var(--bg-3), transparent 48%),
-    linear-gradient(135deg, color-mix(in srgb, var(--bg-1) 70%, #ffffff), color-mix(in srgb, var(--bg-3) 75%, #f7f5f3));
+  background: radial-gradient(circle at 12% 18%, color-mix(in srgb, var(--bg-1) 88%, #ffffff), transparent 52%),
+    radial-gradient(circle at 85% 14%, color-mix(in srgb, var(--bg-2) 86%, #ffffff), transparent 48%),
+    radial-gradient(circle at 52% 82%, color-mix(in srgb, var(--bg-3) 84%, #ffffff), transparent 50%),
+    linear-gradient(135deg, color-mix(in srgb, var(--bg-1) 74%, #fffef8), color-mix(in srgb, var(--bg-3) 80%, #f8fbff));
 }
 
 #phraseWall {
   position: relative;
   width: 100vw;
   height: 100vh;
+  overflow: hidden;
 }
 
 .phrase {
   position: absolute;
   margin: 0;
   line-height: 1.15;
-  font-weight: 700;
+  font-weight: 800;
   white-space: nowrap;
-  text-shadow: 0 4px 14px rgba(255, 255, 255, 0.45);
   user-select: none;
+  text-shadow: 0 3px 9px rgba(255, 255, 255, 0.78);
   animation-name: drift, shimmer;
   animation-timing-function: ease-in-out, ease-in-out;
   animation-iteration-count: infinite, infinite;
@@ -47,20 +47,20 @@ body {
 
 @keyframes drift {
   from {
-    transform: translate3d(0, 0, 0) rotate(var(--tilt));
+    transform: translate3d(0, 0, 0);
   }
 
   to {
-    transform: translate3d(var(--dx), var(--dy), 0) rotate(calc(var(--tilt) * -1));
+    transform: translate3d(var(--dx), var(--dy), 0);
   }
 }
 
 @keyframes shimmer {
   from {
-    opacity: 0.55;
+    opacity: 0.72;
   }
 
   to {
-    opacity: 0.95;
+    opacity: 1;
   }
 }

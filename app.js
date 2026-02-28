@@ -43,26 +43,26 @@ const encouragements = [
   '勇敢一点，奇迹会出现。'
 ];
 
-const morandiPalettes = [
+const livelyMorandiPalettes = [
   {
-    background: ['#C9B6A9', '#AEB5A2', '#9FA8B7'],
-    text: ['#505763', '#6A5D54', '#4F5B58', '#62556A']
+    background: ['#F5CFC2', '#BFE0CF', '#C8D7F3'],
+    text: ['#5B4F5D', '#4F5F67', '#5F5A4D', '#4E6A64', '#6F6078', '#556B86']
   },
   {
-    background: ['#D4C3B5', '#B8C0B2', '#B5BBC7'],
-    text: ['#5D5862', '#556162', '#6C5A52', '#4E5D68']
+    background: ['#F6D9C8', '#C3E2D5', '#CFD9F0'],
+    text: ['#5A5567', '#4E6260', '#6A5C4E', '#4D6273', '#6F5E67', '#4F6C89']
   },
   {
-    background: ['#CAB7B5', '#B4B7AA', '#A9B2C0'],
-    text: ['#4E515E', '#655A52', '#50615E', '#665A6B']
+    background: ['#F3D3D0', '#C8DEC8', '#CAD4EC'],
+    text: ['#5C5365', '#4F655E', '#6A5A52', '#4E6070', '#665B77', '#54718B']
   },
   {
-    background: ['#CFC0AD', '#AEB8B0', '#BCC3D0'],
-    text: ['#525C65', '#6C5A51', '#4E5E5A', '#655D6C']
+    background: ['#F7DCCB', '#C6DFD9', '#D2DBF4'],
+    text: ['#5D5668', '#53665F', '#6D5E51', '#4C6375', '#5F637B', '#4F6F8E']
   },
   {
-    background: ['#D6C7BD', '#B4BEB9', '#B9C2CC'],
-    text: ['#5B5562', '#58625A', '#6A5E54', '#4F6070']
+    background: ['#F4D6C7', '#C0E1D3', '#CDD8F2'],
+    text: ['#5A5266', '#4F6663', '#6B5B50', '#506171', '#6A5E72', '#51708A']
   }
 ];
 
@@ -70,8 +70,34 @@ function randomFrom(array) {
   return array[Math.floor(Math.random() * array.length)];
 }
 
+function randomInRange(min, max) {
+  return min + Math.random() * (max - min);
+}
+
+function shuffle(array) {
+  const copy = [...array];
+  for (let index = copy.length - 1; index > 0; index -= 1) {
+    const swapIndex = Math.floor(Math.random() * (index + 1));
+    [copy[index], copy[swapIndex]] = [copy[swapIndex], copy[index]];
+  }
+  return copy;
+}
+
+function intersects(a, b, gap) {
+  return !(
+    a.right + gap < b.left ||
+    a.left - gap > b.right ||
+    a.bottom + gap < b.top ||
+    a.top - gap > b.bottom
+  );
+}
+
+function canPlace(rect, placedRects, gap) {
+  return placedRects.every((existing) => !intersects(rect, existing, gap));
+}
+
 function applyPalette() {
-  const palette = randomFrom(morandiPalettes);
+  const palette = randomFrom(livelyMorandiPalettes);
   const root = document.documentElement;
   root.style.setProperty('--bg-1', palette.background[0]);
   root.style.setProperty('--bg-2', palette.background[1]);
@@ -81,35 +107,87 @@ function applyPalette() {
 
 function createPhraseNode(text, palette) {
   const phrase = document.createElement('p');
-  const fontSize = 18 + Math.random() * 58;
-  const left = Math.random() * 100;
-  const top = Math.random() * 100;
-  const tilt = -10 + Math.random() * 20;
-  const driftX = -18 + Math.random() * 36;
-  const driftY = -14 + Math.random() * 28;
-  const driftDuration = 6 + Math.random() * 10;
-  const shimmerDuration = 2.2 + Math.random() * 3.6;
-  const delay = Math.random() * 3;
+  const fontSize = randomInRange(18, 64);
+  const driftX = randomInRange(-3, 3);
+  const driftY = randomInRange(-3, 3);
+  const driftDuration = randomInRange(4.2, 8.6);
+  const shimmerDuration = randomInRange(1.9, 4.2);
+  const delay = randomInRange(0, 1.8);
 
   phrase.className = 'phrase';
   phrase.textContent = text;
-  phrase.style.left = `${left}%`;
-  phrase.style.top = `${top}%`;
-  phrase.style.fontSize = `${fontSize}px`;
   phrase.style.color = randomFrom(palette.text);
-  phrase.style.setProperty('--tilt', `${tilt}deg`);
+  phrase.style.fontSize = `${fontSize}px`;
   phrase.style.setProperty('--dx', `${driftX}px`);
   phrase.style.setProperty('--dy', `${driftY}px`);
   phrase.style.animationDuration = `${driftDuration}s, ${shimmerDuration}s`;
   phrase.style.animationDelay = `${delay}s, ${delay / 2}s`;
+  phrase.style.visibility = 'hidden';
 
   return phrase;
+}
+
+function placeWithoutOverlap(phrase, placedRects, gap) {
+  const wallWidth = phraseWall.clientWidth;
+  const wallHeight = phraseWall.clientHeight;
+  const textWidth = phrase.offsetWidth;
+  const textHeight = phrase.offsetHeight;
+
+  if (textWidth >= wallWidth || textHeight >= wallHeight) {
+    phrase.remove();
+    return false;
+  }
+
+  const attempts = 180;
+
+  for (let tryIndex = 0; tryIndex < attempts; tryIndex += 1) {
+    const left = randomInRange(0, wallWidth - textWidth);
+    const top = randomInRange(0, wallHeight - textHeight);
+
+    const rect = {
+      left,
+      top,
+      right: left + textWidth,
+      bottom: top + textHeight
+    };
+
+    if (canPlace(rect, placedRects, gap)) {
+      phrase.style.left = `${left}px`;
+      phrase.style.top = `${top}px`;
+      phrase.style.visibility = 'visible';
+      placedRects.push(rect);
+      return true;
+    }
+  }
+
+  phrase.remove();
+  return false;
 }
 
 function renderPhraseWall() {
   phraseWall.innerHTML = '';
   const palette = applyPalette();
   const area = window.innerWidth * window.innerHeight;
+  const targetCount = Math.max(40, Math.min(110, Math.floor(area / 17000)));
+  const pool = shuffle(encouragements);
+  const placedRects = [];
+  const gap = 8;
+
+  let index = 0;
+  let created = 0;
+  let safety = 0;
+
+  while (created < targetCount && safety < targetCount * 6) {
+    const text = pool[index % pool.length];
+    const phrase = createPhraseNode(text, palette);
+    phraseWall.append(phrase);
+
+    if (placeWithoutOverlap(phrase, placedRects, gap)) {
+      created += 1;
+    }
+
+    index += 1;
+    safety += 1;
   const total = Math.max(45, Math.min(130, Math.floor(area / 14000)));
 
   for (let index = 0; index < total; index += 1) {
