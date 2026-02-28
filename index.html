@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>网页版分享演示</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="container">
+      <h1>网页版分享演示</h1>
+      <p class="hint">把“刚刚生成的代码”粘贴进来，自动生成可分享链接，发给别人即可直接查看。</p>
+
+      <section class="panel">
+        <label for="title">标题</label>
+        <input id="title" type="text" placeholder="例如：我的代码演示" />
+
+        <label for="content">代码 / 内容</label>
+        <textarea id="content" rows="12" placeholder="把代码或说明粘贴到这里"></textarea>
+
+        <div class="actions">
+          <button id="previewBtn">预览</button>
+          <button id="shareBtn">复制分享链接</button>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2 id="previewTitle">预览标题</h2>
+        <pre id="previewContent">预览内容会显示在这里。</pre>
+      </section>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>
