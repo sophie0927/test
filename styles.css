@@ -1,11 +1,7 @@
 :root {
-  --bg-1: #ffd7c9;
-  --bg-2: #ffe4c5;
-  --bg-3: #ffe9d9;
-  --bg-angle: 145deg;
-  --bg-pos-1: 14% 18%;
-  --bg-pos-2: 86% 22%;
-  --bg-pos-3: 50% 86%;
+  --bg-1: #ffe7dc;
+  --bg-2: #ffd8cc;
+  --bg-3: #ffeede;
 }
 
 * {
@@ -23,11 +19,10 @@ body {
 
 body {
   background:
-    radial-gradient(120% 92% at var(--bg-pos-1), color-mix(in srgb, var(--bg-1) 90%, #fffdf8) 0%, transparent 58%),
-    radial-gradient(112% 88% at var(--bg-pos-2), color-mix(in srgb, var(--bg-2) 88%, #fff9ef) 0%, transparent 57%),
-    radial-gradient(100% 84% at var(--bg-pos-3), color-mix(in srgb, var(--bg-3) 88%, #fffaf5) 0%, transparent 62%),
-    linear-gradient(var(--bg-angle), color-mix(in srgb, var(--bg-1) 78%, #fff8ef) 0%, color-mix(in srgb, var(--bg-2) 82%, #fff7ef) 50%, color-mix(in srgb, var(--bg-3) 84%, #fff9f1) 100%);
-  transition: background 1.6s ease;
+    radial-gradient(circle at 18% 18%, color-mix(in srgb, var(--bg-1) 88%, #ffffff) 0%, transparent 54%),
+    radial-gradient(circle at 83% 20%, color-mix(in srgb, var(--bg-2) 86%, #ffffff) 0%, transparent 52%),
+    radial-gradient(circle at 50% 84%, color-mix(in srgb, var(--bg-3) 86%, #ffffff) 0%, transparent 56%),
+    linear-gradient(145deg, color-mix(in srgb, var(--bg-1) 76%, #fff9f3), color-mix(in srgb, var(--bg-3) 82%, #fff7f0));
 }
 
 #phraseWall {
@@ -40,13 +35,12 @@ body {
 .phrase {
   position: absolute;
   margin: 0;
-  line-height: 1.12;
+  line-height: 1.15;
   white-space: nowrap;
   user-select: none;
   text-shadow: 0 2px 10px rgba(255, 255, 255, 0.78);
-  will-change: transform;
-  animation-name: scroll-left, shimmer;
-  animation-timing-function: linear, ease-in-out;
+  animation-name: drift, shimmer;
+  animation-timing-function: ease-in-out, ease-in-out;
   animation-iteration-count: infinite, infinite;
 }
 
@@ -62,7 +56,7 @@ body {
 
 @keyframes shimmer {
   from {
-    opacity: 0.72;
+    opacity: 0.74;
   }
 
   to {

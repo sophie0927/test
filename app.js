@@ -45,20 +45,16 @@ const encouragements = [
 
 const warmPalettes = [
   {
-    background: ['#ffd7c9', '#ffe4c5', '#ffe9d9'],
+    background: ['#ffe7dc', '#ffd8cc', '#ffeede'],
     text: ['#8f4f5d', '#7d5f8c', '#5b6e8b', '#8a6a45', '#5b7f73', '#9b5c4c']
   },
   {
-    background: ['#ffcfc7', '#ffe1b9', '#ffe6d5'],
+    background: ['#ffe3d7', '#ffeccf', '#ffe8e2'],
     text: ['#91545f', '#746192', '#5e738d', '#916a48', '#5f7b70', '#a15e4f']
   },
   {
-    background: ['#ffd9d0', '#ffe8cd', '#ffe9de'],
+    background: ['#ffe9e0', '#ffe4d2', '#fff1e8'],
     text: ['#8b4f67', '#6f5f8a', '#5a6f86', '#876943', '#5a7a69', '#9a5949']
-  },
-  {
-    background: ['#ffd5c2', '#ffe2b8', '#ffe7d3'],
-    text: ['#8e5360', '#79608a', '#5b7286', '#8f6c4c', '#5f8173', '#a55f52']
   }
 ];
 
@@ -70,7 +66,24 @@ function randomInRange(min, max) {
   return min + Math.random() * (max - min);
 }
 
-function applyRandomGradient() {
+function shuffle(array) {
+  const copy = [...array];
+  for (let i = copy.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [copy[i], copy[j]] = [copy[j], copy[i]];
+  }
+  return copy;
+}
+
+function intersects(a, b, gap) {
+  return !(a.right + gap <= b.left || a.left >= b.right + gap || a.bottom + gap <= b.top || a.top >= b.bottom + gap);
+}
+
+function canPlace(rect, placedRects, gap) {
+  return placedRects.every((existing) => !intersects(rect, existing, gap));
+}
+
+function applyPalette() {
   const palette = randomFrom(warmPalettes);
   const root = document.documentElement;
 
@@ -85,58 +98,90 @@ function applyRandomGradient() {
   return palette;
 }
 
-function createPhraseNode(text, textPalette) {
-  const node = document.createElement('p');
-  const fontSize = randomInRange(18, 46);
-  const duration = randomInRange(9, 18);
-  const shimmerDuration = randomInRange(1.8, 3.8);
-  const delay = -randomInRange(0, duration);
+function createPhraseNode(text, palette) {
+  const phrase = document.createElement('p');
+  const fontSize = randomInRange(18, 62);
+  const driftX = randomInRange(-4, 4);
+  const driftY = randomInRange(-4, 4);
+  const driftDuration = randomInRange(5, 10);
+  const shimmerDuration = randomInRange(2.4, 4.8);
+  const delay = randomInRange(0, 1.5);
 
-  node.className = 'phrase';
-  node.textContent = text;
-  node.style.fontSize = `${fontSize}px`;
-  node.style.fontWeight = `${Math.floor(randomInRange(580, 840))}`;
-  node.style.letterSpacing = `${randomInRange(0, 1.2).toFixed(2)}px`;
-  node.style.color = randomFrom(textPalette);
-  node.style.animationDuration = `${duration}s, ${shimmerDuration}s`;
-  node.style.animationDelay = `${delay}s, ${Math.abs(delay) / 3}s`;
+  phrase.className = 'phrase';
+  phrase.textContent = text;
+  phrase.style.fontSize = `${fontSize}px`;
+  phrase.style.color = randomFrom(palette.text);
+  phrase.style.letterSpacing = `${randomInRange(0, 1).toFixed(2)}px`;
+  phrase.style.fontWeight = `${Math.floor(randomInRange(600, 850))}`;
+  phrase.style.setProperty('--dx', `${driftX}px`);
+  phrase.style.setProperty('--dy', `${driftY}px`);
+  phrase.style.animationDuration = `${driftDuration}s, ${shimmerDuration}s`;
+  phrase.style.animationDelay = `${delay}s, ${delay / 2}s`;
+  phrase.style.visibility = 'hidden';
 
-  return node;
+  return phrase;
+}
+
+function placeWithoutOverlap(node, placedRects, gap) {
+  const wallWidth = phraseWall.clientWidth;
+  const wallHeight = phraseWall.clientHeight;
+  const width = node.offsetWidth;
+  const height = node.offsetHeight;
+
+  if (width >= wallWidth || height >= wallHeight) {
+    node.remove();
+    return false;
+  }
+
+  for (let i = 0; i < 260; i += 1) {
+    const left = randomInRange(0, wallWidth - width);
+    const top = randomInRange(0, wallHeight - height);
+    const rect = { left, top, right: left + width, bottom: top + height };
+
+    if (canPlace(rect, placedRects, gap)) {
+      node.style.left = `${left}px`;
+      node.style.top = `${top}px`;
+      node.style.visibility = 'visible';
+      placedRects.push(rect);
+      return true;
+    }
+  }
+
+  node.remove();
+  return false;
 }
 
 function renderPhraseWall() {
   phraseWall.innerHTML = '';
-  const palette = applyRandomGradient();
-  const wallWidth = phraseWall.clientWidth;
-  const wallHeight = phraseWall.clientHeight;
+  const palette = applyPalette();
+  const placedRects = [];
+  const area = window.innerWidth * window.innerHeight;
+  const targetCount = Math.max(55, Math.min(165, Math.floor(area / 11000)));
+  const gap = 8;
 
-  const laneHeight = Math.max(46, Math.min(70, Math.floor(wallHeight / 12)));
-  const laneCount = Math.max(8, Math.floor(wallHeight / laneHeight));
-  const itemsPerLane = Math.max(2, Math.min(6, Math.floor(wallWidth / 360)));
+  let index = 0;
+  let placed = 0;
+  let attempts = 0;
+  const words = shuffle(encouragements);
 
-  for (let lane = 0; lane < laneCount; lane += 1) {
-    for (let i = 0; i < itemsPerLane; i += 1) {
-      const text = randomFrom(encouragements);
-      const node = createPhraseNode(text, palette.text);
-      phraseWall.append(node);
+  while (placed < targetCount && attempts < targetCount * 14) {
+    const text = words[index % words.length];
+    const node = createPhraseNode(text, palette);
+    phraseWall.append(node);
 
-      const laneTop = lane * laneHeight;
-      const textHeight = node.offsetHeight;
-      const maxOffsetTop = Math.max(0, laneHeight - textHeight);
-      const top = laneTop + randomInRange(0, maxOffsetTop);
-
-      node.style.top = `${top}px`;
-      node.style.left = `${Math.floor(randomInRange(wallWidth * 0.9, wallWidth * 1.75))}px`;
-      node.style.setProperty('--phrase-width', `${node.offsetWidth + 40}px`);
+    if (placeWithoutOverlap(node, placedRects, gap)) {
+      placed += 1;
     }
+
+    attempts += 1;
+    index += 1;
   }
 }
 
 let resizeTimer;
 window.addEventListener('resize', () => {
   clearTimeout(resizeTimer);
-  resizeTimer = setTimeout(renderPhraseWall, 180);
+  resizeTimer = setTimeout(renderPhraseWall, 160);
 });
 
-setInterval(applyRandomGradient, 10000);
 renderPhraseWall();
