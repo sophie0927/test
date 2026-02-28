@@ -86,9 +86,15 @@ function canPlace(rect, placedRects, gap) {
 function applyPalette() {
   const palette = randomFrom(warmPalettes);
   const root = document.documentElement;
+
   root.style.setProperty('--bg-1', palette.background[0]);
   root.style.setProperty('--bg-2', palette.background[1]);
   root.style.setProperty('--bg-3', palette.background[2]);
+  root.style.setProperty('--bg-angle', `${Math.floor(randomInRange(120, 220))}deg`);
+  root.style.setProperty('--bg-pos-1', `${Math.floor(randomInRange(8, 22))}% ${Math.floor(randomInRange(12, 26))}%`);
+  root.style.setProperty('--bg-pos-2', `${Math.floor(randomInRange(76, 92))}% ${Math.floor(randomInRange(14, 30))}%`);
+  root.style.setProperty('--bg-pos-3', `${Math.floor(randomInRange(40, 60))}% ${Math.floor(randomInRange(78, 92))}%`);
+
   return palette;
 }
 

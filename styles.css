@@ -42,16 +42,15 @@ body {
   animation-name: drift, shimmer;
   animation-timing-function: ease-in-out, ease-in-out;
   animation-iteration-count: infinite, infinite;
-  animation-direction: alternate, alternate;
 }
 
-@keyframes drift {
+@keyframes scroll-left {
   from {
-    transform: translate3d(0, 0, 0);
+    transform: translateX(0);
   }
 
   to {
-    transform: translate3d(var(--dx), var(--dy), 0);
+    transform: translateX(calc(-100vw - var(--phrase-width)));
   }
 }
 
