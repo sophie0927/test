@@ -188,6 +188,11 @@ function renderPhraseWall() {
 
     index += 1;
     safety += 1;
+  const total = Math.max(45, Math.min(130, Math.floor(area / 14000)));
+
+  for (let index = 0; index < total; index += 1) {
+    const text = randomFrom(encouragements);
+    phraseWall.append(createPhraseNode(text, palette));
   }
 }
 
