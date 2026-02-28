@@ -1,68 +1,60 @@
 const phraseWall = document.getElementById('phraseWall');
 
 const encouragements = [
-  '你已经很棒了！',
-  '今天也在发光 ✨',
-  'You are doing great!',
-  'Keep going, you are unstoppable!',
-  'Tu es incroyable !',
-  'Eres más fuerte de lo que crees.',
-  'Du schaffst das!',
-  'Sei stolz auf dich.',
-  'あなたならできる！',
-  '君の努力は必ず報われる。',
-  '당신은 정말 멋져요!',
-  '계속 나아가요, 잘하고 있어요!',
-  'Você é capaz de coisas incríveis!',
-  'Coragem, um passo de cada vez.',
-  'Sei una meraviglia!',
-  'Non mollare, ci sei quasi!',
-  'Ты справишься!',
-  'Ты делаешь это отлично!',
-  'أنت رائع كما أنت!',
-  'استمر، النجاح قريب.',
-  'तुम कमाल हो!',
-  'एक कदम और, तुम कर लोगे।',
-  'Kamu hebat!',
-  'Lanjutkan, kamu pasti bisa!',
-  'Вы молодец!',
-  'Sen harikasın!',
-  'Jsi úžasný/á!',
-  'Jesteś niesamowity/a!',
-  'Jij kunt dit!',
-  'Du är fantastisk!',
-  'คุณทำได้แน่นอน!',
-  'Bạn tuyệt vời lắm!',
-  'Magaling ka!',
-  'Sən bacararsan!',
-  'Ndiyo, unaweza!',
-  'Είσαι υπέροχος/η!',
-  'את/ה אלוף/ה!',
-  'Продовжуй, у тебе все вийде!',
-  '你值得一切美好。',
-  '勇敢一点，奇迹会出现。'
+  '你真的很棒！',
+  '今天也要为自己骄傲。',
+  '你值得被温柔以待。',
+  '慢一点也没关系，你在前进。',
+  'Keep going, you are amazing!',
+  'You are enough, just as you are.',
+  'Small steps are still progress.',
+  'Shine in your own way ✨',
+  'Tu es formidable !',
+  'Tu avances très bien, courage !',
+  'Eres increíble, sigue así.',
+  'Todo va a salir bien.',
+  'Du schaffst das, jeden Tag ein bisschen mehr!',
+  'Sei stolz auf deinen Weg.',
+  'あなたはそのままで素敵です。',
+  '大丈夫、きっとうまくいく。',
+  '당신은 정말 소중한 사람이에요.',
+  '천천히 가도 괜찮아요.',
+  'Você consegue, continue!',
+  'Você ilumina o mundo ao seu redor.',
+  'Sei una meraviglia.',
+  'Vai avanti, ce la fai!',
+  'Ты справишься, я верю в тебя!',
+  'Ты уже молодец.',
+  'أنت قادر على تحقيقها.',
+  'كل خطوة صغيرة لها معنى.',
+  'तुम कमाल हो, ऐसे ही चलते रहो।',
+  'हर दिन एक नई शुरुआत है।',
+  'Kamu hebat, tetap semangat!',
+  'Jangan menyerah, kamu bisa.',
+  'Bạn làm tốt lắm!',
+  'Cứ bình tĩnh, bạn sẽ làm được.',
+  'คุณเก่งมากนะ!',
+  'ไปต่อเลย คุณทำได้แน่นอน',
+  'Jij doet het geweldig!',
+  'Du är fantastisk precis som du är.',
+  'Jesteś silniejszy/silniejsza niż myślisz.',
+  'Sen harikasın, devam et!',
+  'את/ה מדהים/ה בדיוק כמו שאת/ה.',
+  'Είσαι υπέροχος/η!'
 ];
 
-const livelyMorandiPalettes = [
+const warmPalettes = [
   {
-    background: ['#F5CFC2', '#BFE0CF', '#C8D7F3'],
-    text: ['#5B4F5D', '#4F5F67', '#5F5A4D', '#4E6A64', '#6F6078', '#556B86']
+    background: ['#ffe7dc', '#ffd8cc', '#ffeede'],
+    text: ['#8f4f5d', '#7d5f8c', '#5b6e8b', '#8a6a45', '#5b7f73', '#9b5c4c']
   },
   {
-    background: ['#F6D9C8', '#C3E2D5', '#CFD9F0'],
-    text: ['#5A5567', '#4E6260', '#6A5C4E', '#4D6273', '#6F5E67', '#4F6C89']
+    background: ['#ffe3d7', '#ffeccf', '#ffe8e2'],
+    text: ['#91545f', '#746192', '#5e738d', '#916a48', '#5f7b70', '#a15e4f']
   },
   {
-    background: ['#F3D3D0', '#C8DEC8', '#CAD4EC'],
-    text: ['#5C5365', '#4F655E', '#6A5A52', '#4E6070', '#665B77', '#54718B']
-  },
-  {
-    background: ['#F7DCCB', '#C6DFD9', '#D2DBF4'],
-    text: ['#5D5668', '#53665F', '#6D5E51', '#4C6375', '#5F637B', '#4F6F8E']
-  },
-  {
-    background: ['#F4D6C7', '#C0E1D3', '#CDD8F2'],
-    text: ['#5A5266', '#4F6663', '#6B5B50', '#506171', '#6A5E72', '#51708A']
+    background: ['#ffe9e0', '#ffe4d2', '#fff1e8'],
+    text: ['#8b4f67', '#6f5f8a', '#5a6f86', '#876943', '#5a7a69', '#9a5949']
   }
 ];
 
@@ -76,20 +68,15 @@ function randomInRange(min, max) {
 
 function shuffle(array) {
   const copy = [...array];
-  for (let index = copy.length - 1; index > 0; index -= 1) {
-    const swapIndex = Math.floor(Math.random() * (index + 1));
-    [copy[index], copy[swapIndex]] = [copy[swapIndex], copy[index]];
+  for (let i = copy.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [copy[i], copy[j]] = [copy[j], copy[i]];
   }
   return copy;
 }
 
 function intersects(a, b, gap) {
-  return !(
-    a.right + gap < b.left ||
-    a.left - gap > b.right ||
-    a.bottom + gap < b.top ||
-    a.top - gap > b.bottom
-  );
+  return !(a.right + gap <= b.left || a.left >= b.right + gap || a.bottom + gap <= b.top || a.top >= b.bottom + gap);
 }
 
 function canPlace(rect, placedRects, gap) {
@@ -97,7 +84,7 @@ function canPlace(rect, placedRects, gap) {
 }
 
 function applyPalette() {
-  const palette = randomFrom(livelyMorandiPalettes);
+  const palette = randomFrom(warmPalettes);
   const root = document.documentElement;
   root.style.setProperty('--bg-1', palette.background[0]);
   root.style.setProperty('--bg-2', palette.background[1]);
@@ -107,17 +94,19 @@ function applyPalette() {
 
 function createPhraseNode(text, palette) {
   const phrase = document.createElement('p');
-  const fontSize = randomInRange(18, 64);
-  const driftX = randomInRange(-3, 3);
-  const driftY = randomInRange(-3, 3);
-  const driftDuration = randomInRange(4.2, 8.6);
-  const shimmerDuration = randomInRange(1.9, 4.2);
-  const delay = randomInRange(0, 1.8);
+  const fontSize = randomInRange(18, 62);
+  const driftX = randomInRange(-4, 4);
+  const driftY = randomInRange(-4, 4);
+  const driftDuration = randomInRange(5, 10);
+  const shimmerDuration = randomInRange(2.4, 4.8);
+  const delay = randomInRange(0, 1.5);
 
   phrase.className = 'phrase';
   phrase.textContent = text;
-  phrase.style.color = randomFrom(palette.text);
   phrase.style.fontSize = `${fontSize}px`;
+  phrase.style.color = randomFrom(palette.text);
+  phrase.style.letterSpacing = `${randomInRange(0, 1).toFixed(2)}px`;
+  phrase.style.fontWeight = `${Math.floor(randomInRange(600, 850))}`;
   phrase.style.setProperty('--dx', `${driftX}px`);
   phrase.style.setProperty('--dy', `${driftY}px`);
   phrase.style.animationDuration = `${driftDuration}s, ${shimmerDuration}s`;
@@ -127,74 +116,66 @@ function createPhraseNode(text, palette) {
   return phrase;
 }
 
-function placeWithoutOverlap(phrase, placedRects, gap) {
+function placeWithoutOverlap(node, placedRects, gap) {
   const wallWidth = phraseWall.clientWidth;
   const wallHeight = phraseWall.clientHeight;
-  const textWidth = phrase.offsetWidth;
-  const textHeight = phrase.offsetHeight;
+  const width = node.offsetWidth;
+  const height = node.offsetHeight;
 
-  if (textWidth >= wallWidth || textHeight >= wallHeight) {
-    phrase.remove();
+  if (width >= wallWidth || height >= wallHeight) {
+    node.remove();
     return false;
   }
 
-  const attempts = 180;
-
-  for (let tryIndex = 0; tryIndex < attempts; tryIndex += 1) {
-    const left = randomInRange(0, wallWidth - textWidth);
-    const top = randomInRange(0, wallHeight - textHeight);
-
-    const rect = {
-      left,
-      top,
-      right: left + textWidth,
-      bottom: top + textHeight
-    };
+  for (let i = 0; i < 260; i += 1) {
+    const left = randomInRange(0, wallWidth - width);
+    const top = randomInRange(0, wallHeight - height);
+    const rect = { left, top, right: left + width, bottom: top + height };
 
     if (canPlace(rect, placedRects, gap)) {
-      phrase.style.left = `${left}px`;
-      phrase.style.top = `${top}px`;
-      phrase.style.visibility = 'visible';
+      node.style.left = `${left}px`;
+      node.style.top = `${top}px`;
+      node.style.visibility = 'visible';
       placedRects.push(rect);
       return true;
     }
   }
 
-  phrase.remove();
+  node.remove();
   return false;
 }
 
 function renderPhraseWall() {
   phraseWall.innerHTML = '';
   const palette = applyPalette();
-  const area = window.innerWidth * window.innerHeight;
-  const targetCount = Math.max(40, Math.min(110, Math.floor(area / 17000)));
-  const pool = shuffle(encouragements);
   const placedRects = [];
+  const area = window.innerWidth * window.innerHeight;
+  const targetCount = Math.max(55, Math.min(165, Math.floor(area / 11000)));
   const gap = 8;
 
   let index = 0;
-  let created = 0;
-  let safety = 0;
+  let placed = 0;
+  let attempts = 0;
+  const words = shuffle(encouragements);
 
-  while (created < targetCount && safety < targetCount * 6) {
-    const text = pool[index % pool.length];
-    const phrase = createPhraseNode(text, palette);
-    phraseWall.append(phrase);
+  while (placed < targetCount && attempts < targetCount * 14) {
+    const text = words[index % words.length];
+    const node = createPhraseNode(text, palette);
+    phraseWall.append(node);
 
-    if (placeWithoutOverlap(phrase, placedRects, gap)) {
-      created += 1;
+    if (placeWithoutOverlap(node, placedRects, gap)) {
+      placed += 1;
     }
 
+    attempts += 1;
     index += 1;
-    safety += 1;
-  const total = Math.max(45, Math.min(130, Math.floor(area / 14000)));
-
-  for (let index = 0; index < total; index += 1) {
-    const text = randomFrom(encouragements);
-    phraseWall.append(createPhraseNode(text, palette));
   }
 }
 
+let resizeTimer;
+window.addEventListener('resize', () => {
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(renderPhraseWall, 160);
+});
+
 renderPhraseWall();
-window.addEventListener('resize', renderPhraseWall);
